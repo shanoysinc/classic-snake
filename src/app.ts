@@ -144,16 +144,6 @@ function generateInitSnake(snake: Snake) {
   snake.insertAtEnd(102);
   snake.insertAtEnd(101);
   snake.insertAtEnd(100);
-  // snake.insertAtEnd(99);
-  // snake.insertAtEnd(98);
-  // snake.insertAtEnd(97);
-  // snake.insertAtEnd(96);
-  // snake.insertAtEnd(95);
-  // snake.insertAtEnd(94);
-  // snake.insertAtEnd(93);
-  // snake.insertAtEnd(92);
-  // snake.insertAtEnd(91);
-  // snake.insertAtEnd(90);
 }
 generateInitSnake(snake);
 
@@ -181,6 +171,7 @@ function getHighScore() {
 
   return parseInt(highScore);
 }
+
 function setHighScore(newHighScore: number) {
   localStorage.setItem("lost-Snake#HS", newHighScore.toString());
 }
@@ -242,15 +233,13 @@ function drawSnake() {
 drawSnake();
 
 function addSnakeBody(index: number) {
-  if (index < 0 || index > 599) {
-    console.log("stop");
+  if (index < 0 || index > GRID_SIZE - 1) {
     return;
   }
   gridBlock[index].classList.add("snakeBody");
 }
 function removeSnakeBody(index: number) {
-  if (index < 0 || index > 599) {
-    console.log("stop");
+  if (index < 0 || index > GRID_SIZE - 1) {
     return;
   }
   gridBlock[index].classList.remove("snakeBody");
@@ -331,9 +320,7 @@ startBtn?.addEventListener("click", () => {
   playGame = setInterval(() => {
     switch (snake.direction) {
       case SnakeDirection.RIGHT:
-        const moveRightPos = snake.moveRight();
-
-        moveSnake(moveRightPos);
+        moveSnake(snake.moveRight());
         break;
 
       case SnakeDirection.DOWN:
@@ -352,13 +339,13 @@ startBtn?.addEventListener("click", () => {
         break;
     }
 
-    const snakeHeadIndx = snake.head?.value;
-
     if (scoreCount > highScore) {
       highScoreElement &&
         (highScoreElement.textContent = scoreCount.toString());
       setHighScore(scoreCount);
     }
+
+    const snakeHeadIndx = snake.head?.value;
 
     if (snakeHeadIndx) {
       if (snakeHeadIndx < 0) {
@@ -369,7 +356,7 @@ startBtn?.addEventListener("click", () => {
         snake.insertAtBegin(600 - snakeHeadIndx);
       }
 
-      //check if the snake head collide witht the body
+      //check if the snake head collide with its the body
       const isSnakeHeadEqualToBodyIndx = snakeCache.hasIndex(snakeHeadIndx);
       if (isSnakeHeadEqualToBodyIndx) {
         gameOverModalElement && (gameOverModalElement.style.display = "block");
@@ -378,9 +365,9 @@ startBtn?.addEventListener("click", () => {
     }
 
     const isSnakeBodyEqualToApplePos = snakeCache.hasIndex(applePos);
-    const isSnakeHeadEqualTApplePos = snakeHeadIndx === applePos;
+    const isSnakeHeadEqualToApplePos = snakeHeadIndx === applePos;
 
-    if (isSnakeHeadEqualTApplePos || isSnakeBodyEqualToApplePos) {
+    if (isSnakeHeadEqualToApplePos || isSnakeBodyEqualToApplePos) {
       scoreCount++;
       scoreElement && (scoreElement.innerHTML = scoreCount.toString());
       gridBlock[applePos].classList.remove("apple");
@@ -395,7 +382,7 @@ startBtn?.addEventListener("click", () => {
         increaseSnakeSize(snake);
       }
 
-      // inscrease snake speed
+      // increase snake speed
       if (scoreCount % 4 === 0 && SnakeSpeed > 60) {
         SnakeSpeed -= 5;
 
