@@ -8,11 +8,45 @@
 </head>
 
 <body>
-
-    <div class="snakeGrid">
-
+    <div id="gameOver__modal">
+        <div class="modal__backdrop"></div>
+        <div class="modal__body">
+            <h1 class="gameover__title">Game Over</h1>
+            <button class="restartBtn">Restart</button>
+        </div>
     </div>
-    <script src="dist/app.js" defer></script>
+    <div class="outer__container">
+        <div class="main__container">
+            <div class="title__header">
+
+                <h2 class="title">Lost Snake!!!</h2>
+                <div class="scores__container">
+                    <div id="score-board">
+                        <h3>Score: </h3>
+                        <p id="score-count"> 0</p>
+                    </div>
+                    <div class="highscore__container">
+                        <p>Highscore: </p>
+                        <p id='highscore'> 0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="snakeGrid"></div>
+            <div class="button__container">
+                <div class="left__btns">
+                    <button onclick="restartGame()">Restart</button>
+                    <button class="pauseBtn">Pause</button>
+
+                </div>
+                <div class="right__btns">
+                    <button class="startBtn">Start</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="dist/src/app.js"></script>
 </body>
 
 </html>
