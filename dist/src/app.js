@@ -214,18 +214,18 @@ function moveSnake(snakeBody) {
 function snakeControl(e) {
     // console.log(e.keyCode);
     if (e.keyCode === 82) {
-        restartBtn.click();
+        restartBtn?.click();
     }
     // space bar keycode
     if (e.keyCode === 32) {
         if (isGameOver)
             return;
         if (isPause) {
-            startBtn.click();
+            startBtn?.click();
             isPause = false;
             return;
         }
-        pauseBtn.click();
+        pauseBtn?.click();
         isPause = true;
     }
     if (e.keyCode === 40) {

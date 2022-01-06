@@ -1,8 +1,8 @@
 const GRID_SIZE = 600;
 let playGame: undefined | number = undefined;
-const startBtn = document.querySelector(".startBtn");
-const pauseBtn = document.querySelector(".pauseBtn");
-const restartBtn = document.querySelector(".restartBtn");
+const startBtn = document.querySelector<HTMLButtonElement>(".startBtn");
+const pauseBtn = document.querySelector<HTMLButtonElement>(".pauseBtn");
+const restartBtn = document.querySelector<HTMLButtonElement>(".restartBtn");
 const snakeGrid = document.getElementById("snakeGrid");
 const gameOverModalElement = document.getElementById("gameOver__modal");
 const highScoreElement = document.getElementById("highscore");
@@ -263,17 +263,17 @@ function snakeControl(e: { keyCode: number }) {
   // console.log(e.keyCode);
 
   if (e.keyCode === 82) {
-    restartBtn.click();
+    restartBtn?.click();
   }
   // space bar keycode
   if (e.keyCode === 32) {
     if (isGameOver) return;
     if (isPause) {
-      startBtn.click();
+      startBtn?.click();
       isPause = false;
       return;
     }
-    pauseBtn.click();
+    pauseBtn?.click();
     isPause = true;
   }
 
