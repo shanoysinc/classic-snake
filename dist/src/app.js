@@ -8,9 +8,11 @@ const snakeGrid = document.getElementById("snakeGrid");
 const gameOverModalElement = document.getElementById("gameOver__modal");
 const highScoreElement = document.getElementById("highscore");
 const scoreElement = document.getElementById("score-count");
+let isPause = false;
 let SnakeSpeed = 100;
 let scoreCount = 0;
 let hasGameStarted = false;
+let isGameOver = false;
 var SnakeDirection;
 (function (SnakeDirection) {
     SnakeDirection["LEFT"] = "LEFT";
@@ -210,6 +212,22 @@ function moveSnake(snakeBody) {
     }
 }
 function snakeControl(e) {
+    // console.log(e.keyCode);
+    if (e.keyCode === 82) {
+        restartBtn.click();
+    }
+    // space bar keycode
+    if (e.keyCode === 32) {
+        if (isGameOver)
+            return;
+        if (isPause) {
+            startBtn.click();
+            isPause = false;
+            return;
+        }
+        pauseBtn.click();
+        isPause = true;
+    }
     if (e.keyCode === 40) {
         //prevent user from clicking multiply times to move the snake
         if (snake.direction === SnakeDirection.DOWN ||
@@ -291,6 +309,7 @@ startBtn?.addEventListener("click", () => {
             //check if the snake head collide with its the body
             const isSnakeHeadEqualToBodyIndx = snakeCache.hasIndex(snakeHeadIndx);
             if (isSnakeHeadEqualToBodyIndx) {
+                isGameOver = true;
                 gameOverModalElement && (gameOverModalElement.style.display = "block");
                 StopGame();
             }
@@ -324,6 +343,7 @@ pauseBtn?.addEventListener("click", () => {
     StopGame();
 });
 restartBtn?.addEventListener("click", () => {
+    isGameOver = false;
     StopGame();
     snake.forEach((index) => {
         removeSnakeBody(index);
@@ -331,6 +351,7 @@ restartBtn?.addEventListener("click", () => {
     });
     scoreCount = 0;
     SnakeSpeed = 100;
+    scoreElement && (scoreElement.innerHTML = scoreCount.toString());
     generateInitSnake(snake);
     gameOverModalElement && (gameOverModalElement.style.display = "none");
     startBtn?.click();
