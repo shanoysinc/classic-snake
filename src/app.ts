@@ -1,5 +1,7 @@
-const GRID_SIZE = 600;
-let playGame: undefined | number = undefined;
+import { SnakeBodyType, SnakeDirection } from "./types/types";
+import { Snake } from "./utils/snake";
+import { SnakeBodyCache } from "./utils/snakeBodyCache";
+
 const startBtn = document.querySelector<HTMLButtonElement>(".startBtn");
 const pauseBtn = document.querySelector<HTMLButtonElement>(".pauseBtn");
 const restartBtn = document.querySelector<HTMLButtonElement>(".restartBtn");
@@ -7,138 +9,20 @@ const snakeGrid = document.getElementById("snakeGrid");
 const gameOverModalElement = document.getElementById("gameOver__modal");
 const highScoreElement = document.getElementById("highscore");
 const scoreElement = document.getElementById("score-count");
-let isPause = false;
-let SnakeSpeed = 100;
 
+const GRID_SIZE = 600;
+
+let playGame: undefined | number = undefined;
+
+let SnakeSpeed = 100;
 let scoreCount = 0;
 
+let isPause = false;
 let hasGameStarted = false;
 let isGameOver = false;
 
-interface SnakeBodyInt {
-  newHeadIndx: number;
-  oldTailIndx: number | undefined;
-}
-
-type SnakeBodyType = SnakeBodyInt | undefined;
-type forEachCallback = (value: number, index?: number) => void;
-enum SnakeDirection {
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-  UP = "UP",
-  DOWN = "DOWN",
-}
-
-class LinkListNode {
-  value: number;
-  prev: LinkListNode | null;
-  next: LinkListNode | null;
-  constructor(value: number) {
-    this.value = value;
-    this.next = null;
-    this.prev = null;
-  }
-}
-
-class DoubleLinkList {
-  head: LinkListNode | null;
-  tail: LinkListNode | null;
-  size: number = 0;
-  constructor() {
-    this.head = null;
-    this.tail = null;
-  }
-
-  insertAtBegin(value: number) {
-    const newNode = new LinkListNode(value);
-
-    if (this.head == null) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      const oldHead = this.head;
-      newNode.next = oldHead;
-      this.head.prev = newNode;
-      this.head = newNode;
-    }
-    this.size++;
-    return value;
-  }
-  insertAtEnd(value: number) {
-    const newNode = new LinkListNode(value);
-
-    if (this.head == null) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      if (this.tail) {
-        const temp = this.tail;
-        this.tail = newNode;
-        this.tail.prev = temp;
-        this.tail.prev.next = this.tail;
-      }
-    }
-    this.size++;
-    return value;
-  }
-
-  removeEndNode() {
-    if (this.tail) {
-      const deletedTailValue = this.tail.value;
-      let prevNode = this.tail.prev;
-      prevNode?.prev && (prevNode.next = null);
-      this.tail = prevNode;
-      this.size--;
-      return deletedTailValue;
-    }
-  }
-  forEach(callback: forEachCallback) {
-    let currentNode = this.head;
-    let index = 0;
-
-    while (currentNode) {
-      callback(currentNode.value, index);
-      currentNode = currentNode.next;
-      index += 1;
-    }
-  }
-}
-
-class Snake extends DoubleLinkList {
-  direction: SnakeDirection = SnakeDirection.RIGHT;
-  constructor() {
-    super();
-  }
-
-  moveUp() {
-    // because we want to minus 30 from the head value we pass the arg -30
-    // -1 to move Up
-    return this.moveSnake(-30);
-  }
-  moveRight() {
-    return this.moveSnake(1);
-  }
-  moveDown() {
-    return this.moveSnake(30);
-  }
-  moveLeft() {
-    // because we want to minus 1 from the head value we pass the arg -1
-    // -1 to move left
-    return this.moveSnake(-1);
-  }
-
-  private moveSnake(directionValue: number) {
-    if (this.head) {
-      let newHeadValue = this.head.value + directionValue;
-      const newHeadIndx = this.insertAtBegin(newHeadValue);
-      const oldTailIndx = this.removeEndNode();
-
-      return { newHeadIndx, oldTailIndx };
-    }
-  }
-}
-
 const snake = new Snake();
+const snakeCache = new SnakeBodyCache(snake);
 
 function generateInitSnake(snake: Snake) {
   snake.head = null;
@@ -161,11 +45,13 @@ function generateGrid() {
 
 generateGrid();
 
+// a single block in the grid
 const gridBlock = document.querySelectorAll("#snakeGrid div");
 
 let applePos = Math.floor(Math.random() * GRID_SIZE);
 gridBlock[applePos].classList.add("apple");
 
+// fetch the highscore from localstorage if there is a value
 function getHighScore() {
   const highScore = localStorage.getItem("lost-Snake#HS");
 
@@ -174,58 +60,13 @@ function getHighScore() {
   return parseInt(highScore);
 }
 
+// set the highscore in localstorage
 function setHighScore(newHighScore: number) {
   localStorage.setItem("lost-Snake#HS", newHighScore.toString());
 }
 
 const highScore = getHighScore();
 highScoreElement && (highScoreElement.textContent = highScore.toString());
-
-interface SnakeBodyCacheType {
-  [props: string]: boolean;
-}
-
-class SnakeBodyCache {
-  cache: SnakeBodyCacheType = {};
-  constructor(snake: Snake) {
-    snake.forEach((bdyIndx, index) => {
-      if (index !== 0) {
-        this.addToCache(bdyIndx);
-      }
-    });
-  }
-
-  hasIndex(headIndx: number) {
-    if (this.cache[headIndx]) {
-      return true;
-    }
-
-    return false;
-  }
-
-  addBodyIndx(snake: Snake) {
-    if (snake.head?.next) {
-      let snakeBodyIndx = snake.head?.next.value;
-
-      this.addToCache(snakeBodyIndx);
-    }
-  }
-
-  removeBodyIndx(oldTailIndx: number | undefined) {
-    if (oldTailIndx) {
-      if (this.cache[oldTailIndx]) {
-        this.cache[oldTailIndx] = false;
-      }
-    }
-  }
-  private addToCache(index: number) {
-    if (!this.cache[index]) {
-      this.cache[index] = true;
-    }
-  }
-}
-
-const snakeCache = new SnakeBodyCache(snake);
 
 function drawSnake() {
   snake.forEach((index) => {
@@ -240,6 +81,7 @@ function addSnakeBody(index: number) {
   }
   gridBlock[index].classList.add("snakeBody");
 }
+
 function removeSnakeBody(index: number) {
   if (index < 0 || index > GRID_SIZE - 1) {
     return;
@@ -260,8 +102,7 @@ function moveSnake(snakeBody: SnakeBodyType) {
 }
 
 function snakeControl(e: { keyCode: number }) {
-  // console.log(e.keyCode);
-
+  // user can click the button R to restart game
   if (e.keyCode === 82) {
     restartBtn?.click();
   }
@@ -407,7 +248,7 @@ startBtn?.addEventListener("click", () => {
       if (scoreCount % 4 === 0 && SnakeSpeed > 60) {
         SnakeSpeed -= 5;
 
-        //restart interval to adjust snake speed
+        //restart interval to adjust snake speed when it is decrease
         StopGame();
         startBtn?.click();
       }
@@ -436,6 +277,8 @@ restartBtn?.addEventListener("click", () => {
   startBtn?.click();
 });
 
+// Note: this function is used in the index.html file
+// on the restart button
 function restartGame() {
   restartBtn?.click();
 }

@@ -1,0 +1,137 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: hsl(0, 3%, 15%);
+}
+
+#gameOver__modal {
+  display: none;
+}
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+.modal__body {
+  position: fixed;
+
+  text-align: center;
+  top: 10em;
+  right: 25%;
+  left: 25%;
+  padding: 2em 3em;
+  overflow: auto;
+  z-index: 2;
+}
+.gameover__title {
+  font-size: 3.5em;
+  color: hsl(0, 0%, 93%);
+}
+.outer__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  color: hsl(0, 0%, 93%);
+  text-decoration: underline;
+  text-decoration-thickness: 6px;
+  text-decoration-color: hsl(0, 92%, 60%);
+}
+.button__container {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+.right__btns {
+  margin-right: -1em;
+}
+
+button {
+  padding: 0.5em 2em;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  margin-right: 1em;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: hsl(0, 0%, 93%);
+}
+
+.main__container {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+}
+
+#score-board {
+  display: flex;
+  justify-content: center;
+}
+#score-board > * {
+  color: hsl(0, 0%, 93%);
+  font-size: 2rem;
+  padding-left: 0.5em;
+}
+
+.scores__container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.highscore__container {
+  display: flex;
+  margin-top: -2.5em;
+}
+.highscore__container > * {
+  color: hsl(0, 0%, 93%);
+  margin-left: 1em;
+}
+
+#snakeGrid {
+  display: grid;
+  width: 600px;
+  height: 400px;
+  background-color: hsl(0, 3%, 20%);
+  grid-template-columns: repeat(30, 1fr);
+  border-radius: 4px;
+}
+#snakeGrid > div {
+  width: 20px;
+  height: 20px;
+  border: 1px solid hsl(0, 3%, 15%);
+
+  border-top-width: 1px;
+  border-bottom: 0.1em;
+  border-right-width: 0.01em;
+  border-left: 1px;
+}
+
+.snakeBody {
+  background-color: hsl(133, 81%, 58%);
+  border: 0 !important;
+}
+
+.apple {
+  background-color: hsl(0, 92%, 60%);
+  border-radius: 2px;
+}
+
+/*# sourceMappingURL=index.a4e33057.css.map */
