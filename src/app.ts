@@ -1,16 +1,22 @@
-import { SnakeBodyType, SnakeDirection } from "./types/types";
+import {
+  gameOverModalElement,
+  gridBlock,
+  GRID_SIZE,
+  highScoreElement,
+  pauseBtn,
+  restartBtn,
+  scoreElement,
+  startBtn,
+} from "./constants/index";
+import { generateGrid } from "./helpers/generateGrid";
+import { generateInitSnake } from "./helpers/generateInitSnake";
+import { SnakeDirection } from "./types/types";
 import { Snake } from "./utils/snake";
 import { SnakeBodyCache } from "./utils/snakeBodyCache";
-
-const startBtn = document.querySelector<HTMLButtonElement>(".startBtn");
-const pauseBtn = document.querySelector<HTMLButtonElement>(".pauseBtn");
-const restartBtn = document.querySelector<HTMLButtonElement>(".restartBtn");
-const snakeGrid = document.getElementById("snakeGrid");
-const gameOverModalElement = document.getElementById("gameOver__modal");
-const highScoreElement = document.getElementById("highscore");
-const scoreElement = document.getElementById("score-count");
-
-const GRID_SIZE = 600;
+import { setHighScore, getHighScore } from "./utils/gameHighScore";
+import { increaseSnakeSize } from "./helpers/increaseSnakeSize";
+import { removeSnakeBody } from "./helpers/removeSnakeBody";
+import { moveSnake } from "./helpers/moveSnake";
 
 let playGame: undefined | number = undefined;
 
@@ -22,48 +28,15 @@ let hasGameStarted = false;
 let isGameOver = false;
 
 const snake = new Snake();
-const snakeCache = new SnakeBodyCache(snake);
+const snakeBodyCache = new SnakeBodyCache(snake);
 
-function generateInitSnake(snake: Snake) {
-  snake.head = null;
-  snake.insertAtEnd(103);
-  snake.insertAtEnd(102);
-  snake.insertAtEnd(101);
-  snake.insertAtEnd(100);
-}
+generateGrid();
 generateInitSnake(snake);
 
 // document.addEventListener("DOMContentLoaded", () => {
 
-function generateGrid() {
-  for (let index = 0; index < GRID_SIZE; index++) {
-    const divElement = document.createElement("div");
-    divElement.classList.add(`gridIndx-${index}`);
-    snakeGrid?.appendChild(divElement);
-  }
-}
-
-generateGrid();
-
-// a single block in the grid
-const gridBlock = document.querySelectorAll("#snakeGrid div");
-
 let applePos = Math.floor(Math.random() * GRID_SIZE);
 gridBlock[applePos].classList.add("apple");
-
-// fetch the highscore from localstorage if there is a value
-function getHighScore() {
-  const highScore = localStorage.getItem("lost-Snake#HS");
-
-  if (!highScore) return 0;
-
-  return parseInt(highScore);
-}
-
-// set the highscore in localstorage
-function setHighScore(newHighScore: number) {
-  localStorage.setItem("lost-Snake#HS", newHighScore.toString());
-}
 
 const highScore = getHighScore();
 highScoreElement && (highScoreElement.textContent = highScore.toString());
@@ -74,32 +47,6 @@ function drawSnake() {
   });
 }
 drawSnake();
-
-function addSnakeBody(index: number) {
-  if (index < 0 || index > GRID_SIZE - 1) {
-    return;
-  }
-  gridBlock[index].classList.add("snakeBody");
-}
-
-function removeSnakeBody(index: number) {
-  if (index < 0 || index > GRID_SIZE - 1) {
-    return;
-  }
-  gridBlock[index].classList.remove("snakeBody");
-}
-
-function moveSnake(snakeBody: SnakeBodyType) {
-  // adding the previous head to cache
-  snakeCache.addBodyIndx(snake);
-  if (snakeBody?.oldTailIndx) {
-    snakeCache.removeBodyIndx(snakeBody.oldTailIndx);
-    removeSnakeBody(snakeBody.oldTailIndx);
-  }
-  if (snakeBody?.newHeadIndx) {
-    addSnakeBody(snakeBody.newHeadIndx);
-  }
-}
 
 function snakeControl(e: { keyCode: number }) {
   // user can click the button R to restart game
@@ -159,14 +106,6 @@ function snakeControl(e: { keyCode: number }) {
 }
 document.addEventListener("keyup", snakeControl);
 
-function increaseSnakeSize(snake: Snake) {
-  if (snake.head && snake.tail) {
-    const newTailIndx = snake.tail.value - 1;
-    snake.insertAtEnd(newTailIndx);
-    gridBlock[newTailIndx].classList.add("snakeBody");
-  }
-}
-
 function StopGame() {
   clearInterval(playGame);
   playGame = undefined;
@@ -180,19 +119,19 @@ startBtn?.addEventListener("click", () => {
   playGame = setInterval(() => {
     switch (snake.direction) {
       case SnakeDirection.RIGHT:
-        moveSnake(snake.moveRight());
+        moveSnake(snake, snake.moveRight(), snakeBodyCache);
         break;
 
       case SnakeDirection.DOWN:
-        moveSnake(snake.moveDown());
+        moveSnake(snake, snake.moveDown(), snakeBodyCache);
         break;
 
       case SnakeDirection.UP:
-        moveSnake(snake.moveUp());
+        moveSnake(snake, snake.moveUp(), snakeBodyCache);
         break;
 
       case SnakeDirection.LEFT:
-        moveSnake(snake.moveLeft());
+        moveSnake(snake, snake.moveLeft(), snakeBodyCache);
         break;
 
       default:
@@ -217,7 +156,7 @@ startBtn?.addEventListener("click", () => {
       }
 
       //check if the snake head collide with its the body
-      const isSnakeHeadEqualToBodyIndx = snakeCache.hasIndex(snakeHeadIndx);
+      const isSnakeHeadEqualToBodyIndx = snakeBodyCache.hasIndex(snakeHeadIndx);
       if (isSnakeHeadEqualToBodyIndx) {
         isGameOver = true;
 
@@ -226,7 +165,7 @@ startBtn?.addEventListener("click", () => {
       }
     }
 
-    const isSnakeBodyEqualToApplePos = snakeCache.hasIndex(applePos);
+    const isSnakeBodyEqualToApplePos = snakeBodyCache.hasIndex(applePos);
     const isSnakeHeadEqualToApplePos = snakeHeadIndx === applePos;
 
     if (isSnakeHeadEqualToApplePos || isSnakeBodyEqualToApplePos) {
@@ -266,7 +205,7 @@ restartBtn?.addEventListener("click", () => {
   StopGame();
   snake.forEach((index) => {
     removeSnakeBody(index);
-    snakeCache.removeBodyIndx(index);
+    snakeBodyCache.removeBodyIndx(index);
   });
   scoreCount = 0;
   SnakeSpeed = 100;
