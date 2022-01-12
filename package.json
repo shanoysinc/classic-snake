@@ -2,11 +2,10 @@
   "name": "snakes",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/index.js",
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build index.html"
   },
   "author": "",
   "license": "ISC",

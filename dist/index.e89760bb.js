@@ -666,7 +666,7 @@ function restartGame() {
 _index1.restartBtn?.addEventListener("click", restartGame);
 _index1.modalRestartBtn?.addEventListener("click", restartGame);
 
-},{"./types/types":"kqsfB","./constants/index":"aJFLt","./helpers/generateGrid":"2L8ok","./helpers/generateInitSnake":"5fqvP","./utils/snake":"9GalK","./utils/snakeBodyCache":"l6ptT","./utils/gameHighScore":"bu6K1","./helpers/increaseSnakeSize":"6YAt5","./helpers/removeSnakeBody":"bgXQ6","./helpers/moveSnake":"klUSv","./DomElements/index":"cX0QQ"}],"kqsfB":[function(require,module,exports) {
+},{"./types/types":"kqsfB","./constants/index":"aJFLt","./DomElements/index":"cX0QQ","./helpers/generateGrid":"2L8ok","./helpers/generateInitSnake":"5fqvP","./utils/snake":"9GalK","./utils/snakeBodyCache":"l6ptT","./utils/gameHighScore":"bu6K1","./helpers/increaseSnakeSize":"6YAt5","./helpers/removeSnakeBody":"bgXQ6","./helpers/moveSnake":"klUSv"}],"kqsfB":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "SnakeDirection", ()=>SnakeDirection
@@ -717,34 +717,7 @@ parcelHelpers.export(exports, "GRID_SIZE", ()=>GRID_SIZE
 );
 const GRID_SIZE = 600;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"2L8ok":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "gridBlockElements", ()=>gridBlockElements
-);
-var _index = require("../constants/index");
-var _index1 = require("../DomElements/index");
-function generateGrid() {
-    for(let index = 0; index < _index.GRID_SIZE; index++){
-        const divElement = document.createElement("div");
-        divElement.classList.add(`gridIndx-${index}`);
-        _index1.snakeGrid?.appendChild(divElement);
-    }
-}
-function getGridBlockElements() {
-    const gridBlockElements1 = document.querySelectorAll("#snakeGrid div");
-    return gridBlockElements1;
-}
-function initGrid() {
-    generateGrid();
-    const gridBlockElements2 = getGridBlockElements();
-    return {
-        gridBlockElements: gridBlockElements2
-    };
-}
-const { gridBlockElements  } = initGrid();
-
-},{"../constants/index":"aJFLt","../DomElements/index":"cX0QQ","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"cX0QQ":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"cX0QQ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "startBtn", ()=>startBtn
@@ -772,7 +745,34 @@ const gameOverModalElement = document.getElementById("gameOver__modal");
 const highScoreElement = document.getElementById("highscore");
 const scoreElement = document.getElementById("score-count");
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"5fqvP":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"2L8ok":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "gridBlockElements", ()=>gridBlockElements
+);
+var _index = require("../constants/index");
+var _index1 = require("../DomElements/index");
+function generateGrid() {
+    for(let index = 0; index < _index.GRID_SIZE; index++){
+        const divElement = document.createElement("div");
+        divElement.classList.add(`gridIndx-${index}`);
+        _index1.snakeGrid?.appendChild(divElement);
+    }
+}
+function getGridBlockElements() {
+    const gridBlockElements1 = document.querySelectorAll("#snakeGrid div");
+    return gridBlockElements1;
+}
+function initGrid() {
+    generateGrid();
+    const gridBlockElements2 = getGridBlockElements();
+    return {
+        gridBlockElements: gridBlockElements2
+    };
+}
+const { gridBlockElements  } = initGrid();
+
+},{"../constants/index":"aJFLt","../DomElements/index":"cX0QQ","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"5fqvP":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "generateInitSnake", ()=>generateInitSnake
@@ -958,7 +958,7 @@ function increaseSnakeSize(snake) {
     }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../helpers/generateGrid":"2L8ok"}],"bgXQ6":[function(require,module,exports) {
+},{"../helpers/generateGrid":"2L8ok","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"bgXQ6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "removeSnakeBody", ()=>removeSnakeBody
@@ -970,7 +970,7 @@ function removeSnakeBody(index) {
     _generateGrid.gridBlockElements[index].classList.remove("snakeBody");
 }
 
-},{"../constants/index":"aJFLt","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../helpers/generateGrid":"2L8ok"}],"klUSv":[function(require,module,exports) {
+},{"../constants/index":"aJFLt","../helpers/generateGrid":"2L8ok","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}],"klUSv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // import { gridBlockElement } from "../DomElements";
@@ -1000,6 +1000,6 @@ function addSnakeBody(index) {
     _generateGrid.gridBlockElements[index].classList.add("snakeBody");
 }
 
-},{"../constants/index":"aJFLt","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV","../helpers/generateGrid":"2L8ok"}]},["fOQa2","ftAGR"], "ftAGR", "parcelRequired430")
+},{"../constants/index":"aJFLt","../helpers/generateGrid":"2L8ok","@parcel/transformer-js/src/esmodule-helpers.js":"ciiiV"}]},["fOQa2","ftAGR"], "ftAGR", "parcelRequired430")
 
 //# sourceMappingURL=index.e89760bb.js.map
