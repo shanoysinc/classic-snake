@@ -1,4 +1,6 @@
 import { SnakeBodyCacheType } from "../types/types";
+
+// use the snake class as the type
 import { Snake } from "./snake";
 
 export class SnakeBodyCache {

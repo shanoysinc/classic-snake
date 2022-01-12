@@ -1,8 +1,9 @@
-import { gridBlock, GRID_SIZE } from "../constants/index";
+import { GRID_SIZE } from "../constants/index";
+import { gridBlockElements } from "../helpers/generateGrid";
 
 export function addSnakeBody(index: number) {
   if (index < 0 || index > GRID_SIZE - 1) {
     return;
   }
-  gridBlock[index].classList.add("snakeBody");
+  gridBlockElements[index].classList.add("snakeBody");
 }

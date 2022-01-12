@@ -6,6 +6,7 @@ import { SnakeBodyCache } from "../utils/snakeBodyCache";
 import { Snake } from "../utils/snake";
 import { addSnakeBody } from "./addSnakeBody";
 import { removeSnakeBody } from "./removeSnakeBody";
+// import { gridBlockElement } from "../DomElements";
 
 export function moveSnake(
   snake: Snake,
