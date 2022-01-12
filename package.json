@@ -2,7 +2,7 @@
   "name": "snakes",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/index.html",
+  "main": "dist/src/index.js",
   "source": "index.html",
   "scripts": {
     "start": "parcel",
