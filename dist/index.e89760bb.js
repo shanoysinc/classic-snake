@@ -589,6 +589,8 @@ function StopGame() {
 _index1.startBtn?.addEventListener("click", ()=>{
     if (hasGameStarted) return;
     hasGameStarted = true;
+    // I use window.setInterval instead of setInterval to avoid conflict with Nodejs
+    // setInterval and to fix Typescript type infer
     playGame = window.setInterval(()=>{
         switch(snake.direction){
             case _types.SnakeDirection.RIGHT:
@@ -614,7 +616,7 @@ _index1.startBtn?.addEventListener("click", ()=>{
         if (snakeHeadIndx) {
             if (snakeHeadIndx < 0) snake.insertAtBegin(600 + snakeHeadIndx);
             if (snakeHeadIndx > 599) snake.insertAtBegin(600 - snakeHeadIndx);
-            //check if the snake head collides6 with its the body
+            //check if the snake head collides with its the body
             const isSnakeHeadEqualToBodyIndx = snakeBodyCache.hasIndex(snakeHeadIndx);
             if (isSnakeHeadEqualToBodyIndx) {
                 isGameOver = true;
@@ -634,8 +636,8 @@ _index1.startBtn?.addEventListener("click", ()=>{
                 _increaseSnakeSize.increaseSnakeSize(snake);
                 _increaseSnakeSize.increaseSnakeSize(snake);
             } else if (scoreCount % 2 === 0) _increaseSnakeSize.increaseSnakeSize(snake);
-            // increase snake speed
             if (scoreCount % 4 === 0 && SnakeSpeed > 60) {
+                // increase snake speed
                 SnakeSpeed -= 5;
                 //restart interval to adjust snake speed when it is decrease
                 StopGame();
